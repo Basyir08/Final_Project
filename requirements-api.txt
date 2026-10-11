@@ -1,0 +1,19 @@
+# ---- layanan REST API ----
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.4
+pydantic-settings==2.7.1
+SQLAlchemy==2.0.36
+# driver PostgreSQL (abaikan bila tetap memakai SQLite)
+psycopg[binary]==3.2.3
+
+# ---- inferensi ----
+# Untuk server tanpa GPU, pasang torch versi CPU agar image jauh lebih kecil:
+#   pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cpu
+torch==2.5.1
+torchvision==0.20.1
+ultralytics==8.3.58
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+pandas==2.2.3

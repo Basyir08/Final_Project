@@ -1,0 +1,62 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    image: ghcr.io/OWNER/bone-fracture-detection-api:latest
+    container_name: fracture-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # SQLite (default). Untuk PostgreSQL aktifkan service db di bawah lalu pakai:
+      # DATABASE_URL: postgresql+psycopg://fracture:fracture@db:5432/fracture
+      DATABASE_URL: sqlite:////app/data/predictions.db
+      PRELOAD_MODELS: "false"
+      DEVICE: cpu
+      CORS_ORIGINS: "http://localhost:8501"
+    volumes:
+      # bobot model di-mount dari host, tidak ikut masuk ke image
+      - ./models:/app/models:ro
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  ui:
+    build:
+      context: .
+      dockerfile: docker/ui.Dockerfile
+    image: ghcr.io/OWNER/bone-fracture-detection-ui:latest
+    container_name: fracture-ui
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      API_BASE_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Opsional: PostgreSQL. Jalankan dengan:  docker compose --profile postgres up -d
+  db:
+    image: postgres:16-alpine
+    container_name: fracture-db
+    profiles: ["postgres"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fracture
+      POSTGRES_PASSWORD: fracture
+      POSTGRES_DB: fracture
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fracture"]
+      interval: 10s
+      retries: 5
+
+volumes:
+  pgdata:

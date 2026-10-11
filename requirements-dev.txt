@@ -1,0 +1,14 @@
+# Dipakai CI: cukup ringan, TANPA torch/ultralytics sehingga test cepat.
+fastapi==0.115.6
+python-multipart==0.0.20
+pydantic==2.10.4
+pydantic-settings==2.7.1
+SQLAlchemy==2.0.36
+opencv-python-headless==4.10.0.84
+numpy==1.26.4
+pandas==2.2.3
+
+pytest==8.3.4
+pytest-cov==6.0.0
+httpx==0.28.1
+ruff==0.8.6

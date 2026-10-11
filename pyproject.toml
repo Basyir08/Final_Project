@@ -1,0 +1,23 @@
+[project]
+name = "bone-fracture-detection"
+version = "1.0.0"
+description = "REST API + Streamlit UI untuk deteksi fraktur tulang (YOLO26 & Faster R-CNN)"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["data", "models", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4"]
+ignore = [
+    "B008",   # Depends()/File() pada default argumen = pola wajib FastAPI
+    "C408",   # dict(...) pada konfigurasi plotly lebih terbaca
+    "B905",   # zip(strict=) tidak selalu relevan di sini
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = ["ignore::DeprecationWarning"]
